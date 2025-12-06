@@ -8,3 +8,7 @@ python-multipart
 pymysql
 python-dotenv
 cryptography
+pydantic
+joblib
+scikit-learn
+pandas

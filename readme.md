@@ -1,4 +1,11 @@
-uvicorn main:app --host 0.0.0.0 --port 8000
+## Run locally
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+uvicorn app:app --host 0.0.0.0 --port 8000
+```
 
 ✅ Complete Integration
 Backend (Python):

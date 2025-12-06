@@ -4,36 +4,40 @@ __pycache__/
 *.pyo
 *.pyd
 *.pyc
-*.env
-*.venv
+*.egg-info/
+*.egg
+
+# Virtual environments
+.env/
+.venv/
 env/
 venv/
 ENV/
 env.bak/
 venv.bak/
-models/best.pt
-# Jupyter Notebook
-.ipynb_checkpoints
 
-# VS Code
+# Environment variables
+.env
+
+# IDE / Editors
 .vscode/
+.idea/
+*.swp
+*.swo
+*~
 
-# macOS
+# OS specific
 .DS_Store
-
-# Windows
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+desktop.ini
+~$*
 
 # Logs
 *.log
 
-# Virtual environment
-.env/
-.venv/
-
-# Test output
+# Test & Coverage
 htmlcov/
 .coverage
 .tox/
@@ -41,26 +45,44 @@ nosetests.xml
 coverage.xml
 *.cover
 *.py,cover
+.pytest_cache/
 
 # Distribution / packaging
 build/
 dist/
-*.egg-info/
-*.egg
 MANIFEST
 
 # Pipenv
 Pipfile.lock
 
-# dotenv
-.env
-
-# mypy
+# Type checkers
 .mypy_cache/
-
-# Pyre type checker
 .pyre/
 
-# Others
+# Database
 *.sqlite3
 *.db
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# Data files
+*.csv
+*.xlsx
+*.parquet
+data/
+tmp/
+
+# Docker
+.dockerignore
+Dockerfile
+
+# Project specific
+with photo/uploads/*
+!with photo/uploads/.gitkeep
+with photo/output/*
+!with photo/output/.gitkeep
+with photo/test_photos/*
+!with photo/test_photos/.gitkeep
+with photo/models/best.pt
