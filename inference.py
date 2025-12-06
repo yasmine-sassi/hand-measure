@@ -42,23 +42,6 @@ def detect_coin_with_yolo(image, model):
         return center_x, center_y, radius, class_name
     return None, None, None, None
 
-def recommend_glove_size(palm_mm):
-    if palm_mm < 86:
-        return 5
-    elif 86 <= palm_mm < 96:
-        return 6
-    elif 96 <= palm_mm < 101:
-        return 7
-    elif 101 <= palm_mm < 106:
-        return 8
-    elif 106 <= palm_mm < 111:
-        return 9
-    elif 111 <= palm_mm < 115:
-        return 10
-    elif 115 <= palm_mm < 120:
-        return 11
-    else:
-        return 12
 def process_hand_image(image_path, model_path):
     image = cv2.imread(image_path)
     if image is None:
@@ -88,12 +71,21 @@ def process_hand_image(image_path, model_path):
         mp_drawing.draw_landmarks(image, hand_landmarks, mp_hands.HAND_CONNECTIONS)
 
         lm = [(l.x * image.shape[1], l.y * image.shape[0]) for l in hand_landmarks.landmark]
-        palm_px = calculate_distance(lm[5], lm[17])
-        index_px = calculate_distance(lm[5], lm[8])
-        perimeter_px = (calculate_distance(lm[0], lm[5]) +
-                        calculate_distance(lm[5], lm[9]) +
-                        calculate_distance(lm[9], lm[17]) +
-                        calculate_distance(lm[17], lm[0]))
+        
+        # longueur_main (hand length): wrist to middle finger tip
+        hand_length_px = calculate_distance(lm[0], lm[12])
+        
+        # longueur_paume (palm length): wrist to base of middle finger
+        palm_length_px = calculate_distance(lm[0], lm[9])
+        
+        # tour_main (hand perimeter): around the widest part of the hand
+        # Based on referentiel values (91-115mm), this appears to be hand width across knuckles
+        hand_width_px = calculate_distance(lm[5], lm[17])  # index base to pinky base
+        hand_perimeter_px = hand_width_px  # Direct measurement, not circumference
+        
+        # tour_poignet (wrist perimeter): approximate wrist circumference
+        wrist_width_px = calculate_distance(lm[0], lm[1])
+        wrist_perimeter_px = wrist_width_px * 3.14  # Approximate circle perimeter
 
         # === Enregistrer l’image annotée ===
         annotated_filename = f"annotated_{os.path.basename(image_path)}"
@@ -101,8 +93,9 @@ def process_hand_image(image_path, model_path):
         cv2.imwrite(annotated_path, image)
 
         return {
-            "palm_width_mm": round(pixels_to_mm(palm_px, coin_diameter_px, reference_mm), 2),
-            "index_length_mm": round(pixels_to_mm(index_px, coin_diameter_px, reference_mm), 2),
-            "hand_perimeter_mm": round(pixels_to_mm(perimeter_px, coin_diameter_px, reference_mm), 2),
+            "longueur_main": round(pixels_to_mm(hand_length_px, coin_diameter_px, reference_mm), 2),
+            "longueur_paume": round(pixels_to_mm(palm_length_px, coin_diameter_px, reference_mm), 2),
+            "tour_main": round(pixels_to_mm(hand_perimeter_px, coin_diameter_px, reference_mm), 2),
+            "tour_poignet": round(pixels_to_mm(wrist_perimeter_px, coin_diameter_px, reference_mm), 2),
             "annotated_image_filename": annotated_filename
         }

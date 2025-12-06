@@ -5,3 +5,6 @@ mediapipe
 numpy
 ultralytics
 python-multipart
+pymysql
+python-dotenv
+cryptography
